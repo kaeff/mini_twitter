@@ -1,10 +1,11 @@
 class TweetsController < ApplicationController
-  before_action :set_tweet, only: [:show, :edit, :update, :destroy]
+  before_action :set_tweet, only: [:show, :destroy]
 
   # GET /tweets
   # GET /tweets.json
   def index
     @tweets = Tweet.all
+    @tweet = Tweet.new
   end
 
   # GET /tweets/1
@@ -17,37 +18,19 @@ class TweetsController < ApplicationController
     @tweet = Tweet.new
   end
 
-  # GET /tweets/1/edit
-  def edit
-  end
-
   # POST /tweets
   # POST /tweets.json
   def create
     @tweet = Tweet.new(tweet_params)
 
-    respond_to do |format|
-      if @tweet.save
-        format.html { redirect_to @tweet, notice: 'Tweet was successfully created.' }
-        format.json { render :show, status: :created, location: @tweet }
+    if @tweet.save
+      if request.xhr?
+        render :show, status: :created, location: @tweet
       else
-        format.html { render :new }
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
+        redirect_to tweets_url
       end
-    end
-  end
-
-  # PATCH/PUT /tweets/1
-  # PATCH/PUT /tweets/1.json
-  def update
-    respond_to do |format|
-      if @tweet.update(tweet_params)
-        format.html { redirect_to @tweet, notice: 'Tweet was successfully updated.' }
-        format.json { render :show, status: :ok, location: @tweet }
-      else
-        format.html { render :edit }
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
-      end
+    else
+      render text: @tweet.errors, status: :unprocessable_entity
     end
   end
 

@@ -9,11 +9,7 @@ class TweetsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:tweets)
-  end
-
-  test "should get new" do
-    get :new
-    assert_response :success
+    assert_not_nil assigns(:tweet)
   end
 
   test "should create tweet" do
@@ -21,22 +17,15 @@ class TweetsControllerTest < ActionController::TestCase
       post :create, tweet: { content: @tweet.content }
     end
 
-    assert_redirected_to tweet_path(assigns(:tweet))
+    assert_response :created
+    assert_template 'tweets/show'
   end
 
   test "should show tweet" do
     get :show, id: @tweet
-    assert_response :success
-  end
 
-  test "should get edit" do
-    get :edit, id: @tweet
     assert_response :success
-  end
-
-  test "should update tweet" do
-    patch :update, id: @tweet, tweet: { content: @tweet.content }
-    assert_redirected_to tweet_path(assigns(:tweet))
+    assert_template 'tweets/show'
   end
 
   test "should destroy tweet" do
