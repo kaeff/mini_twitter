@@ -11,6 +11,11 @@ class TweetsController < ApplicationController
   # GET /tweets/1
   # GET /tweets/1.json
   def show
+    if request.xhr?
+      @tweet = Tweet.find(params[:id])
+      render json: @tweet
+    else
+    end
   end
 
   # GET /tweets/new
@@ -25,7 +30,7 @@ class TweetsController < ApplicationController
 
     if @tweet.save
       if request.xhr?
-        render :show, status: :created, location: @tweet
+        render :show, status: :created, location: @tweet, layout: false
       else
         redirect_to tweets_url
       end
